@@ -1,0 +1,21 @@
+## Interface: 50100
+## Title: Athene's Upgrade Estimator LR
+## Author: Cognitive on Kazzak EU
+## Version: 5.0
+## Notes: Calculates upgrade from mouseovered items
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: AUE_LR, AthenesDB, AUELR_RotationDB, AUELR_HealRotDB, AUELR_ItemDB
+AUE_Frame_Universals.lua
+AUE_Frame_Globals.lua
+AUE_Frame_Locals.lua
+AUE_Frame_Comparison.lua
+AUE_Frame_Scenario.lua
+AUE_Functions.lua
+AUE_Functions_Class.lua
+AUE_Functions_DPS.lua
+AUE_Functions_Item.lua
+AUE_Functions_Abilities.lua
+AUE_GUI_Tooltips.lua
+AUE_GUI_CharScreen.lua
+AUE_Load.lua
