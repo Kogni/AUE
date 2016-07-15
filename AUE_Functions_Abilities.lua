@@ -38,8 +38,9 @@ function AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT (event, arg1, sourceGUI
   print("AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT Dmg=", nil, "ability=", nil)
 end
 
-function AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT_UNFILTERED (event, timestamp, event2, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags, spellID, spellName, spellSchool, arg12, arg13)
-  print("AUE_Static.Functions_Abilities.COMBAT_LOG_EVENT event=", event, " ", timestamp, " ", event2, " ", sourceGUID, " ", sourceName, " ", sourceFlags, " ", destGUID, " ", destName, " ", destFlags, " ", spellID, " ", spellName, " ", spellSchool, " ", arg12, " ", arg13)
+function AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT_UNFILTERED (event, timestamp, eventtype, sourceGUID, sourceName, caster, destGUID, destName, destFlags, spellID, spellName, spellSchool, arg12, arg13)
+  print("AUE_Static.Functions_Abilities.COMBAT_LOG_EVENT_UNFILTERED event=", event, timestamp, eventtype, sourceGUID, sourceName, caster, destGUID, destName, destFlags,spellID, spellName, spellSchool, arg12, arg13)
+  --print("AUE_Static.Functions_Abilities.COMBAT_LOG_EVENT_UNFILTERED event2=", event2)
   -- arg12 - SuffixParam1
   -- arg13 - SuffixParam2
   -- arg14 - SuffixParam3
@@ -49,8 +50,19 @@ function AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT_UNFILTERED (event, time
   -- arg18 - SuffixParam7
   -- arg19 - SuffixParam8
   -- arg20 - SuffixParam9
+  if ( eventtype == "SWING_DAMAGE") then
+    if ( caster == UnitName("player")) then
+      print("AUE_Static.Functions_Abilities.COMBAT_LOG_EVENT_UNFILTERED timestamp=", timestamp, "sourceGUID=",sourceGUID, "sourceName=",sourceName, "caster=",caster, "destGUID=",destGUID, "destName=",destName, "destFlags=",destFlags)
+      print("AUE_Static.Functions_Abilities.COMBAT_LOG_EVENT_UNFILTERED spellID=", spellID, "spellName=",spellName, "spellSchool=",spellSchool, "arg12",arg12, "arg13",arg13)
+
+      AUE_Static.Functions_Abilities:SwingDamage(timestamp, eventtype, sourceGUID, sourceName, caster, destGUID, destName, destFlags, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
+    end
+  end
 
   print("AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT Dmg=", nil, "ability=", spellID)
+end
+
+function AUE_Static.Functions_Abilities:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
 end
 
 function AUE_Static.Functions_Abilities:NoteAbilityDmg(abilityID, nonCritDmg)

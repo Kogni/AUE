@@ -236,51 +236,39 @@ SLASH_AthenesUpgradeEstimator2 = "/AUE";
 local frame = CreateFrame("FRAME", "FooAddonFrame");
 frame:RegisterEvent("PLAYER_ENTERING_WORLD");
 frame:RegisterEvent("ADDON_LOADED");
-frame:RegisterEvent("COMBAT_LOG_EVENT");
+--frame:RegisterEvent("COMBAT_LOG_EVENT");
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 frame:RegisterEvent("COMBAT_TEXT_SHOW_RESISTANCES");
 frame:RegisterEvent("COMBAT_TEXT_UPDATE");
 frame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
 frame:RegisterEvent("UNIT_COMBAT");
 local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5)
-  print("eventHandler event=", event, arg1, arg2, arg3, arg4, arg5);
-  if ( event == "COMBAT_TEXT_UPDATE") then
+  print("eventHandler event=", event, " - ",arg1, arg2, arg3, arg4, arg5);
+  if ( event == "COMBAT_LOG_EVENT_UNFILTERED") then
+    --print("eventHandler event COMBAT_LOG_EVENT_UNFILTERED")
+    --if ( arg2 == "DAMAGE") then
+    AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT_UNFILTERED(event, arg1, arg2, arg3, arg4, arg5)
+    --end
+  elseif ( event == "COMBAT_TEXT_UPDATE") then
+    print("eventHandler event COMBAT_TEXT_UPDATE")
     if ( arg1 == "DAMAGE") then
       AUE_Static.Functions_Abilities:COMBAT_TEXT_UPDATE(event, arg1, arg2, arg3)
     end
   elseif ( event == "UNIT_COMBAT") then
+    print("eventHandler event UNIT_COMBAT")
     if ( arg2 == "DAMAGE") then
       AUE_Static.Functions_Abilities:UNIT_COMBAT(event, arg1, arg2, arg3, arg4, arg5)
     end
   elseif ( event == "COMBAT_LOG_EVENT ") then
+    print("eventHandler event COMBAT_LOG_EVENT")
     if ( arg2 == "DAMAGE") then
       AUE_Static.Functions_Abilities:UNIT_COMBAT(event, arg1, arg2, arg3, arg4, arg5)
     end
-  elseif ( event == "COMBAT_LOG_EVENT_UNFILTERED ") then
-    if ( arg2 == "DAMAGE") then
-      AUE_Static.Functions_Abilities:COMBAT_LOG_EVENT_UNFILTERED(event, arg1, arg2, arg3, arg4, arg5)
-    end
   else
-    
+    print("eventHandler event unspecified:", event)
   end
 end
 frame:SetScript("OnEvent", eventHandler);
 
-local frame, events = CreateFrame("Frame"), {};
-function events:PLAYER_ENTERING_WORLD(...)
-  print("PLAYER_ENTERING_WORLD arg1=", arg1);
-end
-function events:PLAYER_LEAVING_WORLD(...)
-  print("PLAYER_LEAVING_WORLD arg1=", arg1);
-end
-function events:MAIL_INBOX_UPDATE(...)
-  print("MAIL_INBOX_UPDATE arg1=", arg1);
-end
-frame:SetScript("OnEvent", function(self, event, ...)
-  events[event](self, ...); -- call one of the functions above
-end);
-for k, v in pairs(events) do
-  frame:RegisterEvent(k); -- Register all events for which handlers have been defined
-end
 
 print("AUE_Globals loaded")
