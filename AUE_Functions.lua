@@ -270,18 +270,22 @@ function AUE_Static.Functions:MakeDefaultAbility()
   return NewAbility
 end
 
-function AUE_Static.Functions:GetItemStats_scenarioItem(scenarioItem)
-  print("AUE_Static.Functions:GetItemStats item=", scenarioItem.ItemLink)
+function AUE_Static.Functions:GetItemStats_scenarioItem(scenario, scenarioItem)
+  print("AUE_Static.Functions:GetItemStats_scenarioItem item=", scenarioItem.ItemLink)
+  if (scenario.ItemLink == nil )then
+    print("AUE_Static.Functions:GetItemStats_scenarioItem scenario.ItemLink=nil, aborting")
+    return scenarioItem
+  end
   if (scenarioItem.ItemLink == nil )then
-    print("AUE_Static.Functions:GetItemStats scenario.ItemLink=nil, aborting")
+    print("AUE_Static.Functions:GetItemStats_scenarioItem scenarioItem.ItemLink=nil, aborting")
     return scenarioItem
   end
   if (scenarioItem.Tooltip == nil )then
-    print("AUE_Static.Functions:GetItemStats scenario.Tooltip=nil, aborting ", scenarioItem.ItemLink)
+    print("AUE_Static.Functions:GetItemStats_scenarioItem scenarioItem.Tooltip=nil, aborting ", scenarioItem.ItemLink)
     return scenarioItem
   end
   if (scenarioItem.GotItemStats == true )then
-    print("AUE_Static.Functions:GetItemStats GotItemStats==true, aborting")
+    print("AUE_Static.Functions:GetItemStats_scenarioItem scenarioItem.GotItemStats==true, aborting")
     return scenarioItem
   end
   --print("AUE_Static.Functions:GetItemStats continues ")
@@ -292,10 +296,21 @@ function AUE_Static.Functions:GetItemStats_scenarioItem(scenarioItem)
   --local Usable2 = AUE_Static.Functions_Class:CanUse2(ItemLink)
   --print("AUE_Static.Functions:GetItemStats Usable1=", Usable1, "Usable2=", Usable2)
 
-  AUE_Static.Functions_Item:CalculateStatSet_scenario( scenarioItem )
+  if ( scenarioItem.ItemString == nil ) then
+    scenarioItem.ItemString = AUE_Static.Functions_Item:GetItemString_String( scenario )
+  end
+
+  scenario = AUE_Static.Functions_Item:CalculateStatSet_scenario( scenario )
+  if (scenarioItem.ItemLink == nil )then
+    print("AUE_Static.Functions:GetItemStats_scenarioItem 2 scenarioItem.ItemLink=nil, aborting")
+    return scenarioItem
+  end
 
   scenarioItem.ItemName, scenarioItem.ItemLink, scenarioItem.itemRarity, scenarioItem.ilevel, scenarioItem.itemMinLevel, scenarioItem.itemType, scenarioItem.itemSubType, scenarioItem.itemStackCount, scenarioItem.itemEquipLoc, scenarioItem.itemTexture = GetItemInfo( scenarioItem.ItemLink )
-  scenarioItem.ItemStats = AUELR_ItemDB.ItemInfo[ scenarioItem.Item_String..":"..scenarioItem.ItemName ].itemstats
+  if ( AUELR_ItemDB.ItemInfo[ scenarioItem.ItemString..":"..scenarioItem.ItemName ] == nil ) then
+    AUELR_ItemDB.ItemInfo[ scenarioItem.ItemString..":"..scenarioItem.ItemName ] = {}
+  end
+  scenarioItem.ItemStats = AUELR_ItemDB.ItemInfo[ scenarioItem.ItemString..":"..scenarioItem.ItemName ].itemstats
 
   if ( scenarioItem.ItemStats ) then
     if ( scenarioItem.ItemStats ~= nil ) then
@@ -311,9 +326,9 @@ function AUE_Static.Functions:GetItemStats_scenarioItem(scenarioItem)
   if (scenarioItem.itemstats == nil) then
     print("AUE_Static.Functions:GetItemStats scenario.itemstats=nil")
   end
-  AUE_Static.Functions_Item:ReadLines_scenario(scenarioItem)
+  AUE_Static.Functions_Item:ReadLines_scenario(scenario)
   scenarioItem.GotItemStats = true
-  return scenarioItem
+  return scenario
 end
 
 function AUE_Static.Functions:GetSortedStats(StatsSet)

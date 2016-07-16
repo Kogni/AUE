@@ -49,14 +49,14 @@ function AUE_Static.Comparison.Parsing(tooltip) --triggers comparison
   CurrentComparison = {}
   CurrentComparison.Tooltip =tooltip
   Compare = true
-  local ComparedItem_String = ""
+  local ComparedItemString = ""
   local PreviousItem = ""
   local ItemName, link = tooltip:GetItem();
   if ( link ~= nil ) then
-    local found, _, Item_String = string.find(link, "^|c%x+|H(.+)|h%[.*%]")
-    Item_String = string.sub(Item_String, 6, 10)
-    tooltip:AddLine("Item ID:"..Item_String)
-    ComparedItem_String = Item_String
+    local found, _, ItemString = string.find(link, "^|c%x+|H(.+)|h%[.*%]")
+    ItemString = string.sub(ItemString, 6, 10)
+    tooltip:AddLine("Item ID:"..ItemString)
+    ComparedItemString = ItemString
   else
     --print("AUE_Static.Comparison.Parsing link is nil, returning")
     return
@@ -379,7 +379,7 @@ function AUE_Static.Comparison.CalculateDPSScenario_comparison(comparison) --cal
   end
   --print("AUE_Static.Comparison:ComparedToCalculate_comparison comparedScenario=", comparison.ComparedScenario)
   --print("AUE_Static.Comparison:ComparedToCalculate_comparison currentScenario=", comparison.CurrentScenario)
-  print("AUE_Static.Comparison:ComparedToCalculate_comparison comparison=", comparison)
+  --print("AUE_Static.Comparison:ComparedToCalculate_comparison comparison=", comparison)
   return comparison
 end
 

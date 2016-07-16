@@ -13,7 +13,7 @@ local Functions_Item = {};
 _G.AUE_Static.Functions_Item = Functions_Item
 
 function AUE_Static.Functions_Item:ReadLines_scenario(scenario)
-  print("AUE_Static.Functions_Item:ReadLines ", tooltip)
+  print("AUE_Static.Functions_Item:ReadLines_scenario ", scenario)
   if scenario.Tooltip == nil then
     print("AUE_Static.Functions_Item:ReadLines scenario.Tooltip is nil, aborting")
     return scenario
@@ -26,22 +26,27 @@ function AUE_Static.Functions_Item:ReadLines_scenario(scenario)
     print("AUE_Static.Functions_Item:ReadLines already read lines, aborting")
     return scenario
   end
+    if( scenario.ItemString == nil) then
+    print("AUE_Static.Functions_Item:ReadLines scenario.ItemString=nil, aborting")
+    return scenario
+  end
   --print("AUE_Static.Functions:ReadLines ", scenario.ItemLink)
   --print("AUE_Static.Functions_Item:ReadLines continues", tooltip)
   --local Equipped_ItemLink = GetInventoryItemLink("player", 16)
   --local ItemName, link = tooltip:GetItem();
   --print("AUE_Static.Functions_Item:ReadLines AUELR_ItemDB.ItemInfo=", AUELR_ItemDB.ItemInfo)
   if (scenario.ItemName == nil ) then
-    scenario.ItemName, scenario.ItemLink, scenario.itemRarity, scenario.ilevel, scenario.itemMinLevel, scenario.itemType, scenario.itemSubType, scenario.itemStackCount, scenario.itemEquipLoc, scenario.itemTexture = GetItemInfo( scenario.Equippeditem_1 );
+    --print("AUE_Static.Functions_Item:ReadLines_scenario scenario.Equippeditem_1=", scenario.Equippeditem_1)
+    scenario.ItemName, scenario.ItemLink, scenario.itemRarity, scenario.ilevel, scenario.itemMinLevel, scenario.itemType, scenario.itemSubType, scenario.itemStackCount, scenario.itemEquipLoc, scenario.itemTexture = GetItemInfo( scenario.Equippeditem_1.ItemLink );
   end
-  --print("AUE_Static.Functions_Item:ReadLines ItemInfo=", AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_scenario( Equipped_ItemLink  )..":"..scenario.ItemName ])
-  if ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ]== nil)then
-    AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ] = {}
+  --print("AUE_Static.Functions_Item:ReadLines ItemInfo=", AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_String( Equipped_ItemLink  )..":"..scenario.ItemName ])
+  if ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ]== nil)then
+    AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ] = {}
   end
-  if ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].Functions_Item== nil)then
-    AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].Functions_Item = {}
+  if ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].Functions_Item== nil)then
+    AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].Functions_Item = {}
   end
-  scenario.ItemStatArray = AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].Functions_Item
+  scenario.ItemStatArray = AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].Functions_Item
   --print("AUE_Static.Functions_Item:ReadLines ItemStatArray=", ItemStatArray)
 
   for i=1,scenario.Tooltip:NumLines() do
@@ -68,7 +73,7 @@ function AUE_Static.Functions_Item:CheckLine_scenario(scenario, i)
   Color_Green_Right = (floor(Color_Green_Right*100))/100
 
   --ItemName is nil
-  --local ItemName = AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].Name
+  --local ItemName = AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].Name
 
   if ( scenario.ItemStatArray == nil ) then
     print("AUE_Static.Functions_Item:ReadLines scenario.ItemStatArray=nil, aborting")
@@ -136,7 +141,7 @@ function AUE_Static.Functions_Item:GetItemStatArray3_scenario(scenario)
       -- Increases exp rate by x
       -- increases spell power by x
 
-      --stat, value = AUE_Static.Functions_Item:FinnEquipProcc( TextLeft, Itemname, ItemLink, Item_String );
+      --stat, value = AUE_Static.Functions_Item:FinnEquipProcc( TextLeft, Itemname, ItemLink, ItemString );
       if ( value ~= nil ) and ( value > 0 ) then --adder stats fra proccs
         scenario = AUE_Static.Functions_Item:AddStat( scenario, stat, value, "Evaluate 1016");
       end
@@ -287,13 +292,13 @@ function AUE_Static.Functions_Item:Use_scenario(scenario, TextLeft)
     elseif ( TextLeft == "Use: Grants 6420 mana, but consumes all applications of Inner Eye and prevents Inner Eye from being triggered for 30 sec. (2 Min Cooldown)" ) then
       stat = "manaper5"
       value = ((6420/(2*60)) *5)
-      scenario = AUE_Static.Functions_Item:AddStat( AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_scenario(scenario )..":"..scenario.ItemName ].Functions_Item, stat, value, "Evaluate 830");
+      scenario = AUE_Static.Functions_Item:AddStat( AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_String(scenario )..":"..scenario.ItemName ].Functions_Item, stat, value, "Evaluate 830");
       stat = "spirit"
       value = -(103*5*30)*(30/120)
     elseif ( TextLeft == "Use: Grants 7260 mana, but consumes all applications of Inner Eye and prevents Inner Eye from being triggered for 30 sec. (2 Min Cooldown)" ) then
       stat = "manaper5"
       value = ((7260/(2*60)) *5)
-      scenario = AUE_Static.Functions_Item:AddStat( AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_scenario(scenario )..":"..scenario.ItemName ].Functions_Item, stat, value, "Evaluate 836");
+      scenario = AUE_Static.Functions_Item:AddStat( AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_String(scenario )..":"..scenario.ItemName ].Functions_Item, stat, value, "Evaluate 836");
       stat = "spirit"
       value = -(103*5*30)*(30/120)
     elseif ( TextLeft == "Use: Consume 5 stacks of Raw Fury to forge into the form of a Blackwing Dragonkin, granting 1926 Strength for 20 sec. (2 Min Cooldown)" ) then
@@ -340,15 +345,15 @@ function AUE_Static.Functions_Item:Use_scenario(scenario, TextLeft)
     elseif ( TextLeft == "Use: Grants 8,871 dodge for 10 sec. (1 Min Cooldown)" ) then
       return scenario
     elseif ( strmatch(TextLeft, "Chance") ~= nil ) or ( strmatch(TextLeft, "chance") ~= nil ) then
-      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, Item_String )
+      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, ItemString )
     elseif ( strmatch(TextLeft, "Lasts") ~= nil ) or ( strmatch(TextLeft, "lasts") ~= nil ) then
-      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, Item_String )
+      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, ItemString )
     elseif ( strmatch(TextLeft, "Grant") ~= nil ) or ( strmatch(TextLeft, "grant") ~= nil ) then
-      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, Item_String )
+      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, ItemString )
     elseif ( strmatch(TextLeft, "Spells") ~= nil ) or ( strmatch(TextLeft, "spells") ~= nil ) then
-      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, Item_String )
+      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, ItemString )
     elseif ( strmatch(TextLeft, "Mana") ~= nil ) or ( strmatch(TextLeft, "mana") ~= nil ) then
-      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, Item_String )
+      print( "AUE evaluate item unknown item use:", TextLeft, ItemLink, ItemString )
     else
       local OnUse = stat
       --Increases your X rating by Y for Z sec. (Æ Min Cooldown)
@@ -464,7 +469,7 @@ function AUE_Static.Functions_Item:Use_scenario(scenario, TextLeft)
       end
     end
     if ( value > 0 ) then
-      scenario = AUE_Static.Functions_Item:AddStat( AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_scenario(scenario )..":"..scenario.ItemName ].Functions_Item, stat, value, "Evaluate 1005");
+      scenario = AUE_Static.Functions_Item:AddStat( AUELR_ItemDB.ItemInfo[ AUE_Static.Functions_Item:GetItemString_String(scenario )..":"..scenario.ItemName ].Functions_Item, stat, value, "Evaluate 1005");
     end
   end
   return scenario
@@ -652,17 +657,17 @@ function AUE_Static.Functions_Item:GetUnique_scenario(scenario)
   print("AUE_Static.Functions_Item:GetUnique ", scenario)
   if ( TextLeft == "Unique-Equipped" ) then
     if ( _G.PreviousItem ~= nil ) then
-      local found, _, Item_String = string.find(_G.PreviousItem, "^|c%x+|H(.+)|h%[.*%]")
-      Item_String = string.sub(Item_String, 6, 10)
-      if ( IsEquippedItem(Item_String) ) then
+      local found, _, ItemString = string.find(_G.PreviousItem, "^|c%x+|H(.+)|h%[.*%]")
+      ItemString = string.sub(ItemString, 6, 10)
+      if ( IsEquippedItem(ItemString) ) then
         scenario.ItemStatArray.Unique = true
       end
     end
   elseif ( TextLeft == "Unique" ) then
     if ( _G.PreviousItem ~= nil ) then
-      local found, _, Item_String = string.find(_G.PreviousItem, "^|c%x+|H(.+)|h%[.*%]")
-      Item_String = string.sub(Item_String, 6, 10)
-      if ( IsEquippedItem(Item_String) ) then
+      local found, _, ItemString = string.find(_G.PreviousItem, "^|c%x+|H(.+)|h%[.*%]")
+      ItemString = string.sub(ItemString, 6, 10)
+      if ( IsEquippedItem(ItemString) ) then
         scenario.ItemStatArray.Unique = true
       end
     end
@@ -697,21 +702,21 @@ function AUE_Static.Functions_Item:AddStat( scenario, stat, value, source )
   return scenario;
 end
 
-function AUE_Static.Functions_Item:GetItemString_scenario( scenario  )
-  print("AUE_Static.Functions_Item:GetItem_String ", scenario)
+function AUE_Static.Functions_Item:GetItemString_String( scenario )
+  print("AUE_Static.Functions_Item:GetItemString ", scenario)
   if ( scenario.ItemLink == nil ) then
-    print("AUE_Static.Functions_Item:GetItem_String scenario.ItemLink == nil, aborting")
-    return scenario
+    print("AUE_Static.Functions_Item:GetItemString scenario.ItemLink == nil, aborting")
+    return nil
   end
 
-  scenario.color, scenario.Item_String, scenario.enchantId, scenario.jewelId1, scenario.jewelId2, scenario.jewelId3, scenario.jewelId4, scenario.suffixId, scenario.uniqueId, scenario.ItemLink, scenario.reforgeId = strsplit(":", scenario.ItemLink)
+  scenario.color, scenario.ItemString, scenario.enchantId, scenario.jewelId1, scenario.jewelId2, scenario.jewelId3, scenario.jewelId4, scenario.suffixId, scenario.uniqueId, scenario.ItemLink, scenario.reforgeId = strsplit(":", scenario.ItemLink)
 
-  if ( scenario.Item_String == nil ) then
-    print("AUE_Static.Functions_Item:GetItem_String scenario.Item_String == nil , aborting")
-    return scenario
+  if ( scenario.ItemString == nil ) then
+    print("AUE_Static.Functions_Item:GetItemString scenario.ItemString == nil for", scenario.ItemLink)
+    return scenario.ItemString
   end
 
-  return scenario
+  return scenario.ItemString
 end
 
 function AUE_Static.Functions_Item:GetSubtype( scenario  )
@@ -720,10 +725,10 @@ function AUE_Static.Functions_Item:GetSubtype( scenario  )
     return scenario
   end
   --local ItemName, ItemLink, itemRarity, ilevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture = GetItemInfo(ItemLink);
-  if ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ] == nil ) then
+  if ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ] == nil ) then
     return "ERROR @ AUE_Static.Functions_Item:GetSubtype 1681: no saved info for item"
   end
-  return AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].Subtype
+  return AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].Subtype
 end
 
 function AUE_Static.Functions_Item:GetEquipLoc( scenario  )
@@ -739,10 +744,10 @@ function AUE_Static.Functions_Item:GetEquipLoc( scenario  )
     return scenario
   end
   --local ItemName, ItemLink, itemRarity, ilevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture = GetItemInfo(ItemLink);
-  if ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ] == nil ) then
+  if ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ] == nil ) then
     return scenario
   end
-  return AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].EquipLoc
+  return AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].EquipLoc
 end
 
 function AUE_Static.Functions_Item:GetNameFromLink( scenario )
@@ -1012,11 +1017,11 @@ function AUE_Static.Functions_Item:LetEtterStat_scenario( Soekestat, Streng, val
 end
 
 function AUE_Static.Functions_Item:CalculateStatSet_scenario( scenario ) --slot bestemmer bl.a offhand\mainhand slot
-  print("AUE_Static.Functions_Item:CalculateStatSet ", scenario.ItemLink)
+  print("AUE_Static.Functions_Item:CalculateStatSet_scenario ", scenario.ItemLink)
 
   scenario.StatSet_Base = AUE_Static.Functions:MakeNewStatSet()
   if ( scenario.ItemLink == nil ) then
-    print("AUE_Static.Functions_Item:CalculateStatSet scenario.ItemLink=nil, aborting")
+    print("AUE_Static.Functions_Item:CalculateStatSet_scenario scenario.ItemLink=nil, aborting")
     return scenario
   end
   scenario = AUE_Static.Functions_Item:CalculateStatSet2_scenario( scenario )
@@ -1025,26 +1030,26 @@ function AUE_Static.Functions_Item:CalculateStatSet_scenario( scenario ) --slot 
 end
 
 function AUE_Static.Functions_Item:CalculateStatSet2_scenario( scenario )
-  scenario = AUE_Static.Functions_Item:GetItemString_scenario( scenario )
-  if not ( scenario.Item_String ) then
-    print("AUE_Static.Functions_Item:CalculateStatSet scenario.Item_String=nil, aborting")
+  scenario.ItemString = AUE_Static.Functions_Item:GetItemString_String( scenario )
+  if not ( scenario.ItemString ) then
+    print("AUE_Static.Functions_Item:CalculateStatSet2_scenario scenario.ItemString=nil, aborting")
     return scenario
   end
   if ( scenario.ItemName == nil ) then
     scenario.ItemName, scenario.ItemLink, scenario.itemRarity, scenario.ilevel, scenario.itemMinLevel, scenario.itemType, scenario.itemSubType, scenario.itemStackCount, scenario.itemEquipLoc, scenario.itemTexture = GetItemInfo( scenario.ItemLink )
   end
   if ( scenario.ItemLink == nil ) then
-    print("AUE_Static.Functions_Item:CalculateStatSet scenario.ItemLink=nil, aborting")
+    print("AUE_Static.Functions_Item:CalculateStatSet2_scenario scenario.ItemLink=nil, aborting")
     return scenario
   end
-  --scenario = AUE_Static.Functions_Item:GetItemString_scenario( scenario )
+  --scenario = AUE_Static.Functions_Item:GetItemString_String( scenario )
   --print("AUE_Static.Functions_Item:CalculateStatSet AUELR_ItemDB.ItemInfo=", AUELR_ItemDB.ItemInfo)
-  --print("AUE_Static.Functions_Item:CalculateStatSet lookup=", scenario.Item_String..":"..scenario.ItemName)
-  --print("AUE_Static.Functions_Item:CalculateStatSet itemlookup=", AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ])
-  if ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ] == nil ) then
-    AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ] = {}
+  --print("AUE_Static.Functions_Item:CalculateStatSet lookup=", scenario.ItemString..":"..scenario.ItemName)
+  --print("AUE_Static.Functions_Item:CalculateStatSet itemlookup=", AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ])
+  if ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ] == nil ) then
+    AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ] = {}
   end
-  scenario.ItemStats = AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStats
+  scenario.ItemStats = AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStats
 
   if ( scenario.ItemStats ) then
     if ( scenario.ItemStats ~= nil ) then
@@ -1056,27 +1061,27 @@ function AUE_Static.Functions_Item:CalculateStatSet2_scenario( scenario )
     end
   end
 
-  if AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ] and ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper == nil ) then
-    AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper = {}
+  if AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ] and ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper == nil ) then
+    AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper = {}
   end
   if ( scenario.Slot == nil )then
     scenario.Slot = 1
   end
 
   if ( scenario.Slot == nil ) then
-    print( "AUE_Static.Functions_Item:CalculateStatSet a1: ingen slot", ItemLink, Source, scenario.Slot )
-  elseif not ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ] ) then
-    print( "AUE_Static.Functions_Item:CalculateStatSet a", AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ], ItemLink, Source, scenario.Slot )
-  elseif not ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper ) then
-    print( "AUE_Static.Functions_Item:CalculateStatSet b", AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper, ItemLink, Source, scenario.Slot )
-  elseif not ( AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot] ) then
+    print( "AUE_Static.Functions_Item:CalculateStatSet2_scenario a1: ingen slot", ItemLink, Source, scenario.Slot )
+  elseif not ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ] ) then
+    print( "AUE_Static.Functions_Item:CalculateStatSet2_scenario a", AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ], ItemLink, Source, scenario.Slot )
+  elseif not ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper ) then
+    print( "AUE_Static.Functions_Item:CalculateStatSet2_scenario b", AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper, ItemLink, Source, scenario.Slot )
+  elseif not ( AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot] ) then
     if ( scenario.Slot > -1 ) and ( scenario.Slot < 2 ) then
-      AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot] = scenario.StatSet_Base.Stats
+      AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot] = scenario.StatSet_Base.Stats
     else
-      print( "AUE_Static.Functions_Item:CalculateStatSet c", AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot], ItemLink, Source, scenario.Slot )
+      print( "AUE_Static.Functions_Item:CalculateStatSet2_scenario c", AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot], ItemLink, Source, scenario.Slot )
     end
   else
-    AUELR_ItemDB.ItemInfo[ scenario.Item_String..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot] = scenario.StatSet_Base.Stats
+    AUELR_ItemDB.ItemInfo[ scenario.ItemString..":"..scenario.ItemName ].ItemStatsProper[scenario.Slot] = scenario.StatSet_Base.Stats
   end
 end
 
@@ -1091,7 +1096,7 @@ end
 --end
 --scenario.Equippeditem_1 = {}
 --scenario.StatSet_Base = {}
---scenario.Item_String = ""
+--scenario.ItemString = ""
 --scenario.ItemStatArray = {}
 
 --TextLeft = ""

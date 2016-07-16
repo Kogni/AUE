@@ -53,6 +53,7 @@ function AUE_Static.Scenario:NewScenario_scenario(itemlink, comparison)
   scenario.Equippeditem_1.ItemLink = comparison.EquippedItem_1
   --print("AUE_Static.Scenario:NewScenario ItemLink=", scenario.Equippeditem_1.ItemLink)
   scenario.Slot=0
+  scenario.ItemLink = itemlink
   scenario = AUE_Static.Scenario:GetNoncombatStats_scenario(scenario)
 
   return scenario
@@ -60,6 +61,10 @@ end
 
 function AUE_Static.Scenario:GetNoncombatStats_scenario(scenario)
   print("AUE_Static.Scenario:GetNoncombatStats Equippeditem_1=", scenario.Equippeditem_1)
+  if (scenario.ItemLink == nil )then
+    print("AUE_Static.Scenario.GetNoncombatStats_scenario scenario.ItemLink=nil, aborting")
+    return scenarioItem
+  end
   if ( scenario.ComparedItem.ItemLink == nil )then
     print("AUE_Static.Scenario:GetNoncombatStats scenario.ItemLink=nil, aborting")
     return scenario
@@ -85,7 +90,11 @@ function AUE_Static.Scenario:GetNoncombatStats_scenario(scenario)
 end
 
 function AUE_Static.Scenario.GetEquippedItemStats_scenario(scenario)
-  scenario.Equippeditem_1 = AUE_Static.Functions:GetItemStats_scenarioItem(scenario.Equippeditem_1)
+  if (scenario.ItemLink == nil )then
+    print("AUE_Static.Scenario.GetEquippedItemStats_scenario scenario.ItemLink=nil, aborting")
+    return scenarioItem
+  end
+  scenario.Equippeditem_1 = AUE_Static.Functions:GetItemStats_scenarioItem(scenario, scenario.Equippeditem_1)
   --print("AUE_Static.Scenario:GetNoncombatStats EquippedItemStats=", EquippedItemStats)
 
   --print("AUE_Static.Scenario:GetNoncombatStats ber om GetItemStats comparedlink")
@@ -95,7 +104,7 @@ function AUE_Static.Scenario.GetEquippedItemStats_scenario(scenario)
 end
 
 function AUE_Static.Scenario.GetComparedItemStats_scenario(scenario)
-  scenario.ComparedItem = AUE_Static.Functions:GetItemStats_scenarioItem(scenario.ComparedItem)
+  scenario.ComparedItem = AUE_Static.Functions:GetItemStats_scenarioItem(scenario, scenario.ComparedItem)
   --print("AUE_Static.Scenario:GetNoncombatStats ComparedItemStats=", ComparedItemStats)
 
   if ( scenario.ComparedItem == nil ) then
